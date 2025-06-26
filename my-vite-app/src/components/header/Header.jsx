@@ -1,11 +1,14 @@
-import React from "react";
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from "react";
+import { useState , } from 'react';
+import { Link , useLocation} from 'react-router-dom';
 import { FaBars } from "react-icons/fa";
 
 function Header() {
   const [isOpen, setIsOpen] = useState(false);
-
+  const location= useLocation()
+useEffect(()=>{
+ setIsOpen(false);
+},[location])
   return (
 
 <>
@@ -20,6 +23,8 @@ function Header() {
           <Link to="/about" className="hover:text-amber-500">About</Link>
           <Link to="/service" className="hover:text-amber-500">Services</Link>
           <Link to="/contact" className="hover:text-amber-500">Contact</Link>
+          <Link to="/login" className="hover:text-amber-500">Login</Link>
+          <Link to="/signup" className="hover:text-amber-500">Signup</Link>
         </div>
 
         {/* Mobile Toggle Button */}
@@ -41,6 +46,8 @@ function Header() {
           <Link to="/about" className="block text-white hover:text-amber-500">About</Link>
           <Link to="/service" className="block text-white hover:text-amber-500">Services</Link>
           <Link to="/contact" className="block text-white hover:text-amber-500">Contact</Link>
+        <Link to="/login" className=" block text-white hover:text-amber-500">Login</Link>
+          <Link to="/signup" className="block text-white hover:text-amber-500">Signup</Link>
         </div>
       )}
     </nav>

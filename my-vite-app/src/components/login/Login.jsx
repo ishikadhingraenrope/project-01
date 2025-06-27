@@ -20,7 +20,7 @@ e.preventDefault();
     if (mail === savedUser.mail && password === savedUser.password) {
       toast.success("Login successful!");
       setTimeout(() => {
-        navigate("/"); // redirect to homepage/dashboard
+        navigate("/profile"); // redirect to homepage/dashboard
       }, 1500);
     } else {
       toast.error("Invalid credentials!");

@@ -8,6 +8,7 @@ import Contact from './components/contact/Contact'
 import Login from './components/login/Login'
 import Signup from './components/signup/Signup'
 import App from './App.jsx'
+import Profile from './components/profile/Profile.jsx'
 import {RouterProvider} from "react-router-dom"
 import  { createBrowserRouter, createRoutesFromElements, Route } from "react-router-dom"
 
@@ -21,6 +22,7 @@ createRoutesFromElements(
 <Route path='contact' element={<Contact/>}/>
 <Route path='login' element={<Login/>}/>
 <Route path='signup' element={<Signup/>}/>
+<Route path='profile' element={<Profile/>}/>
 
 
 </Route>

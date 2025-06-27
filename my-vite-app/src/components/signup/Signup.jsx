@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-  import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa"; 
 function Signup() {
     const navigate = useNavigate();
 
@@ -8,41 +9,54 @@ function Signup() {
     const [last, SetLast] = useState("")
     const [number, SetNumber] = useState("")
     const [gender, SetGender] = useState("")
-    const [age, SetAge] = useState("")
-const [disable, SetDisable] = useState(true)
-useEffect(()=>{
-if(first && last && number && gender && age){
-    SetDisable(false)
-}else{
-    SetDisable(true)
-}
-},[first,last,number,gender,age])
+    const [age, SetAge] = useState("") 
+    const[mail,SetEmail] = useState("") 
+    const[password, SetPassword] = useState("")
+    const [showPassword, setShowPassword] = useState(false);
 
-const handleButton=(e)=>{
-setTimeout(()=>{
-    e.preventDefault();// prevent page reloads
-    const userdata={
-first,last,number,gender,age
-    };
-    //set data to loclstorage
-    localStorage.setItem("userdata", JSON.stringify(userdata))
-    //yippe data saved
-      toast.success("Yipee! Data Saved")
-  console.log("data saved!",userdata)
-   // Reset input fields after submission
-     SetFirst("");
-     SetLast("");
-     SetGender("");
-     SetNumber("");
-     SetAge("");
-setTimeout(()=>{
-    navigate("/")
-},1500)
+    const [disable, SetDisable] = useState(true)
 
+    useEffect(() => {
+        if (first && last && number && gender && age && mail && password) {
+            SetDisable(false)
+        } else {
+            SetDisable(true)
+        }
+    }, [first, last, number, gender, age, mail, password])
 
-},500)
+   const handleButton = (e) => {
+    e.preventDefault();
 
-}
+    if (number.length !== 10) {
+      toast.error("Phone number must be exactly 10 digits");
+      return;
+    }
+
+     if (Number(age) < 1 || Number(age) > 100) {
+            toast.error("Age must be between 1 and 100");
+            return;
+        }
+
+        if (!/^[A-Za-z!@#$%^&*()_+\-={}\[\]:;"'<>,.?/~`|\\]+$/.test(password)) {
+            toast.error("Password must contain only alphabets and special characters");
+            return;
+        }
+    const userdata = { first, last, number, gender, age , mail, password };
+    localStorage.setItem("userdata", JSON.stringify(userdata));
+    toast.success("Yipee! Data Saved");
+
+    // Clear fields
+    SetFirst("");
+    SetLast("");
+    SetGender("");
+    SetNumber(""); //  RESET AS EMPTY STRING
+    SetAge("");
+    SetEmail("");
+    SetPassword("");
+    setTimeout(() => {
+      navigate("/login");
+    }, 1500);
+  };
     return (
         <>
             <div className="flex min-h-full flex-col justify-center px-6  lg:px-5">
@@ -51,15 +65,15 @@ setTimeout(()=>{
                 </div>
 
                 <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                    <form method="POST">
+                    <form onSubmit={handleButton} method="POST">
 
                         <div className="flex items-center justify-between">
-                            <label htmlhtmlFor="first" className="block text-sm/6 font-medium text-gray-900">
+                            <label htmlFor="first" className="block text-sm/6 font-medium text-gray-900">
                                 First Name
                             </label>
                         </div>
                         <div className="mt-2">
-                            <input onChange={(e)=> SetFirst(e.target.value)} type="text" name="firstname" id="first" required={true} value={first} className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+                            <input onChange={(e) => SetFirst(e.target.value)} type="text" name="firstname" id="first" required={true} value={first} className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
                         </div>
 
                         <div className="flex items-center justify-between">
@@ -68,7 +82,7 @@ setTimeout(()=>{
                             </label>
                         </div>
                         <div className="mt-2">
-                            <input onChange={(e)=> SetLast(e.target.value)}  type="text" name="lastname" required={true} id="last" value={last} className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+                            <input onChange={(e) => SetLast(e.target.value)} type="text" name="lastname" required={true} id="last" value={last} className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
                         </div>
 
                         <div className="flex items-center justify-between mt-5">
@@ -76,42 +90,83 @@ setTimeout(()=>{
 
                         </div>
                         <div className=" flex items-center justify-between mt-5">
-          <input  onChange={(e)=>SetGender(e.target.value)} checked={gender === "male"} type="radio" name="gender" id="male" value="male"  required />
-          <label htmlFor="male" className="block text-sm/6 font-medium text-gray-900">Male </label><br/>
-          <input  onChange={(e)=>SetGender(e.target.value)} checked={gender === "female"}  type="radio" name="gender" id="female" value="female"  required />
-          <label htmlFor="female" className="block text-sm/6 font-medium text-gray-900">Female</label><br/>
-
-          
-          <input  onChange={(e)=>SetGender(e.target.value)} checked={gender === "transgender"} type="radio" name="gender" id="transgender" value="transgender" required />
-          <label htmlFor="transgender" className="block text-sm/6 font-medium text-gray-900">Transgender</label><br/>
-
-        </div>
-
-<div className="flex items-center justify-between mt-5">
-        <label htmlFor="phone" className="block text-sm/6 font-medium text-gray-900">Enter Your Phone Number</label>
-        </div>
-  <div className="mt-2">
-        <input onChange={(e)=>SetNumber(e.target.value)} type="tel"  value={number} className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" id="phone" name="phone"  required placeholder="123-393-5874" />        </div>
-
-<div className="flex items-center justify-between mt-5">
-        <label htmlFor="age" className="block text-sm/6 font-medium text-gray-900">Enter Your Age</label>
-        </div>
-        <div className="mt-5">
-        <input onChange={(e)=>SetAge(e.target.value)} value={age} type="text" id="age" name="age"   className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"  />
-
-           </div>
+                            <input onChange={(e) => SetGender(e.target.value)} checked={gender === "male"} type="radio" name="gender" id="male" value="male" required />
+                            <label htmlFor="male" className="block text-sm/6 font-medium text-gray-900">Male </label><br />
+                            <input onChange={(e) => SetGender(e.target.value)} checked={gender === "female"} type="radio" name="gender" id="female" value="female" required />
+                            <label htmlFor="female" className="block text-sm/6 font-medium text-gray-900">Female</label><br />
 
 
-           <div className="m-5">
-            <button onClick={handleButton} disabled={disable} type="button" 
-            style={{color: disable ? "red" : "green"}} className="py-3 px-5 bg-[#f2f1f1] rounded-xl hover:border-primary">
-                Sign Up
-            </button>
-            
-           </div>
-                   
+                            <input onChange={(e) => SetGender(e.target.value)} checked={gender === "transgender"} type="radio" name="gender" id="transgender" value="transgender" required />
+                            <label htmlFor="transgender" className="block text-sm/6 font-medium text-gray-900">Transgender</label><br />
+
+                        </div>
+
+                        <div className="flex items-center justify-between mt-5">
+                            <label htmlFor="phone" className="block text-sm/6 font-medium text-gray-900">Enter Your Phone Number</label>
+                        </div>
+                        <div className="mt-2">
+                            <input onChange={(e) => {
+                                const input = e.target.value.replace(/\D/g, ""); // Remove all non-digits
+                                if (input.length <= 10) {
+                                    SetNumber(input);
+                                }
+                            }} type="tel" maxLength={10} inputMode="numeric" title="Enter a 10 Digit Number" value={number} className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" id="phone" name="phone" required placeholder="1234567890" />        </div>
+
+                        <div className="flex items-center justify-between mt-5">
+                            <label htmlFor="age" className="block text-sm/6 font-medium text-gray-900">Enter Your Age</label>
+                        </div>
+                        <div className="mt-5">
+                            <input onChange={(e) => {const input = e.target.value.replace(/\D/g, ""); // Remove all non-digits
+                              if(Number(input)<=100){
+                            SetAge(input);
+                              }
+                                  
+                                }} value={age} type="text" id="age" name="age" className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+
+                        </div>
+
+                       <div className="flex items-center justify-between mt-5">
+                            <label htmlFor="mail" className="block text-sm/6 font-medium text-gray-900">Enter Your Email</label>
+                        </div>
+                       <div className="mt-5">
+                            <input onChange={(e) => SetEmail(e.target.value)} required value={mail} type="email" id="mail" name="mail" placeholder="example@.com" className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+
+                        </div>
+                        
+                         <div className="flex items-center justify-between mt-5">
+                            <label htmlFor="password" className="block text-sm/6 font-medium text-gray-900">Enter Your Password</label>
+                        </div>
+                                  <div className="mt-5">
+                             
+                             <input
+    type={showPassword ? "text" : "password"}
+    value={password}
+    onChange={(e) => {
+      const filtered = e.target.value.replace(/[0-11]/g, ""); // block digits
+      SetPassword(filtered);
+                            }}  maxLength={10}   id="password" name="password" placeholder="accept only  10 letters and special characters " className="relative block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" 
+                            
+                            />
+                            <button
+    type="button"
+    onClick={() => setShowPassword(!showPassword)}
+    className="eye transform -translate-y-1/2 text-xl text-gray-700 focus:outline-none"
+  >
+    {showPassword ?<FaEye />  : <FaEyeSlash />}
+  </button>
+
+                                 
+                        </div>
+                        <div className="m-5">
+                            <button disabled={disable} type="submit"
+                                style={{ color: disable ? "red" : "green" }} className="py-3 px-5 bg-[#f2f1f1] rounded-xl hover:border-primary">
+                                Sign Up
+                            </button>
+
+                        </div>
+
                     </form>
-                     <ToastContainer />
+                    <ToastContainer />
                 </div>
 
             </div>

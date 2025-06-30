@@ -63,7 +63,7 @@ e.preventDefault();
                             <button
     type="button"
     onClick={() => setShowPassword(!showPassword)}
-    className="absolute  right-3 top-[1/2] transform -translate-y-1/2 text-xl text-gray-700 focus:outline-none"
+    className="absolute  right-3 top-1/2 transform -translate-y-1/2 text-xl text-gray-700 focus:outline-none"
   >
     {showPassword ?<FaEye />  : <FaEyeSlash />}
   </button>                            </div>

@@ -50,20 +50,20 @@ e.preventDefault();
                                 Password
                             </label>
                             </div>
-                            <div className="mt-2">
+                            <div className="mt-2 relative">
 <input
     type={showPassword ? "text" : "password"}
     value={password}
     onChange={(e) => {
       const filtered = e.target.value.replace(/\d/g, "");
       SetPassword(filtered);
-                            }}  maxLength={10}   id="password" name="password" placeholder="Enter Your Password " className="relative block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" 
+                            }}  maxLength={10}   id="password" name="password" placeholder="Enter Your Password " className=" block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" 
                             
                             />
                             <button
     type="button"
     onClick={() => setShowPassword(!showPassword)}
-    className="absolute  xl:top-[49%] xl:right-[36%] transform -translate-y-1/2 text-xl text-gray-700 focus:outline-none"
+    className="absolute  right-3 top-[1/2] transform -translate-y-1/2 text-xl text-gray-700 focus:outline-none"
   >
     {showPassword ?<FaEye />  : <FaEyeSlash />}
   </button>                            </div>

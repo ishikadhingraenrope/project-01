@@ -24,39 +24,76 @@ function Signup() {
         }
     }, [first, last, number, gender, age, mail, password])
 
-   const handleButton = (e) => {
-    e.preventDefault();
+  const handleButton = (e) => {
+  e.preventDefault();
 
-    if (number.length !== 10) {
-      toast.error("Phone number must be exactly 10 digits");
-      return;
-    }
+  if (!first.trim()) {
+    toast.error("First name is required");
+    return;
+  }
 
-     if (Number(age) < 1 || Number(age) > 100) {
-            toast.error("Age must be between 1 and 100");
-            return;
-        }
+  if (!last.trim()) {
+    toast.error("Last name is required");
+    return;
+  }
 
-        if (!/^[A-Za-z!@#$%^&*()_+\-={}\[\]:;"'<>,.?/~`|\\]+$/.test(password)) {
-            toast.error("Password must contain only alphabets and special characters");
-            return;
-        }
-    const userdata = { first, last, number, gender, age , mail, password };
-    localStorage.setItem("userdata", JSON.stringify(userdata));
-    toast.success("Yipee! Data Saved");
+  if (!gender) {
+    toast.error("Gender is required");
+    return;
+  }
 
-    // Clear fields
-    SetFirst("");
-    SetLast("");
-    SetGender("");
-    SetNumber(""); //  RESET AS EMPTY STRING
-    SetAge("");
-    SetEmail("");
-    SetPassword("");
-    setTimeout(() => {
-      navigate("/login");
-    }, 1500);
-  };
+  if (!number.trim()) {
+    toast.error("Phone number is required");
+    return;
+  }
+
+  if (!age.trim()) {
+    toast.error("Age is required");
+    return;
+  }
+
+  if (!mail.trim()) {
+    toast.error("Email is required");
+    return;
+  }
+
+  if (!password.trim()) {
+    toast.error("Password is required");
+    return;
+  }
+
+  if (number.length !== 10) {
+    toast.error("Phone number must be exactly 10 digits");
+    return;
+  }
+
+  if (Number(age) < 1 || Number(age) > 100) {
+    toast.error("Age must be between 1 and 100");
+    return;
+  }
+
+  if (!/^[A-Za-z!@#$%^&*()_+\-={}\[\]:;"'<>,.?/~`|\\]+$/.test(password)) {
+    toast.error("Password must contain only alphabets and special characters");
+    return;
+  }
+
+  const userdata = { first, last, number, gender, age, mail, password };
+  localStorage.setItem("userdata", JSON.stringify(userdata));
+  toast.success("Yipee! Data Saved");
+
+  // Clear fields
+  SetFirst("");
+  SetLast("");
+  SetGender("");
+  SetNumber("");
+  SetAge("");
+  SetEmail("");
+  SetPassword("");
+
+  setTimeout(() => {
+    navigate("/login");
+  }, 1500);
+};
     return (
         <>
             <div className="flex min-h-full flex-col justify-center px-6  lg:px-5">
@@ -73,7 +110,7 @@ function Signup() {
                             </label>
                         </div>
                         <div className="mt-2">
-                            <input onChange={(e) => SetFirst(e.target.value)} type="text" name="firstname" id="first" required={true} value={first} className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+                            <input onChange={(e) => SetFirst(e.target.value)} type="text" name="firstname" id="first"  value={first} className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
                         </div>
 
                         <div className="flex items-center justify-between">
@@ -82,7 +119,7 @@ function Signup() {
                             </label>
                         </div>
                         <div className="mt-2">
-                            <input onChange={(e) => SetLast(e.target.value)} type="text" name="lastname" required={true} id="last" value={last} className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+                            <input onChange={(e) => SetLast(e.target.value)} type="text" name="lastname"  id="last" value={last} className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
                         </div>
 
                         <div className="flex items-center justify-between mt-5">
@@ -90,13 +127,13 @@ function Signup() {
 
                         </div>
                         <div className=" flex items-center justify-between mt-5">
-                            <input onChange={(e) => SetGender(e.target.value)} checked={gender === "male"} type="radio" name="gender" id="male" value="male" required />
+                            <input onChange={(e) => SetGender(e.target.value)} checked={gender === "male"} type="radio" name="gender" id="male" value="male" />
                             <label htmlFor="male" className="block text-sm/6 font-medium text-gray-900">Male </label><br />
-                            <input onChange={(e) => SetGender(e.target.value)} checked={gender === "female"} type="radio" name="gender" id="female" value="female" required />
+                            <input onChange={(e) => SetGender(e.target.value)} checked={gender === "female"} type="radio" name="gender" id="female" value="female"  />
                             <label htmlFor="female" className="block text-sm/6 font-medium text-gray-900">Female</label><br />
 
 
-                            <input onChange={(e) => SetGender(e.target.value)} checked={gender === "transgender"} type="radio" name="gender" id="transgender" value="transgender" required />
+                            <input onChange={(e) => SetGender(e.target.value)} checked={gender === "transgender"} type="radio" name="gender" id="transgender" value="transgender"  />
                             <label htmlFor="transgender" className="block text-sm/6 font-medium text-gray-900">Transgender</label><br />
 
                         </div>
@@ -110,7 +147,7 @@ function Signup() {
                                 if (input.length <= 10) {
                                     SetNumber(input);
                                 }
-                            }} type="tel" maxLength={10} inputMode="numeric" title="Enter a 10 Digit Number" value={number} className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" id="phone" name="phone" required placeholder="1234567890" />        </div>
+                            }} type="tel" maxLength={10} inputMode="numeric" title="Enter a 10 Digit Number" value={number} className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" id="phone" name="phone"  placeholder="1234567890" />        </div>
 
                         <div className="flex items-center justify-between mt-5">
                             <label htmlFor="age" className="block text-sm/6 font-medium text-gray-900">Enter Your Age</label>
@@ -129,7 +166,7 @@ function Signup() {
                             <label htmlFor="mail" className="block text-sm/6 font-medium text-gray-900">Enter Your Email</label>
                         </div>
                        <div className="mt-5">
-                            <input onChange={(e) => SetEmail(e.target.value)} required value={mail} type="email" id="mail" name="mail" placeholder="example@.com" className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+                            <input onChange={(e) => SetEmail(e.target.value)}  value={mail} type="email" id="mail" name="mail" placeholder="example@.com" className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
 
                         </div>
                         
@@ -157,9 +194,9 @@ function Signup() {
 
                                  
                         </div>
-                        <div className="m-5">
-                            <button disabled={disable} type="submit"
-                                style={{ color: disable ? "red" : "green" }} className="py-3 px-5 bg-[#f2f1f1] rounded-xl hover:border-primary">
+                        <div className="m-5 ">
+                            <button  type="submit"
+                                style={{backgroundColor: disable ? "red" : "green" }}   className="py-3 px-5 rounded-xl text-white cursor-pointer">
                                 Sign Up
                             </button>
 

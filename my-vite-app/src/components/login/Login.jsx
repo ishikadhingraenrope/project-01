@@ -70,7 +70,7 @@ e.preventDefault();
                         
 
                         <div className="mt-3">
-                            <button  type="submit" className="py-3 px-5 bg-[#f2f1f1] rounded-xl hover:border-primary">Login</button>
+                            <button  type="submit" className="py-3 px-5 bg-[#f2f1f1] rounded-xl cursor-pointer ">Login</button>
                         </div>
                         <ToastContainer/>
                     </form>

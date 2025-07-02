@@ -1,13 +1,29 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate ,useLocation} from "react-router-dom";
   import { ToastContainer, toast } from 'react-toastify';
 import { FaEye, FaEyeSlash } from "react-icons/fa"; 
 
 function Login() {
      const navigate = useNavigate();
+     const location = useLocation();
+
         const[mail,SetEmail] = useState("") 
     const[password, SetPassword] = useState("")
     const [showPassword, setShowPassword] = useState(false);
+      const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userName, setUserName] = useState("");
+   useEffect(() => {
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    const savedUser = JSON.parse(localStorage.getItem("userdata"));
+
+   if (loggedIn === "true" && savedUser) {
+    setIsLoggedIn(true);
+    setUserName(savedUser.name || savedUser.mail);
+  } else {
+    setIsLoggedIn(false);
+  }
+}, [location]); 
+
     const submit=(e)=>{
 e.preventDefault();
  const savedUser = JSON.parse(localStorage.getItem("userdata"));
@@ -26,7 +42,27 @@ e.preventDefault();
       toast.error("Invalid credentials!");
     }
   };
+  const handleLogout = () => {
+    localStorage.removeItem("isLoggedIn");
+    setIsLoggedIn(false);
+    toast.success("Logged out!");
+  };
 
+  // ✅ If already logged in, show logout UI instead of login form
+  if (isLoggedIn) {
+    return (
+      <div className="p-6 text-center">
+        <h2 className="text-xl font-semibold">Welcome, {userName}!</h2>
+        <button 
+          onClick={handleLogout} 
+          className="mt-4 bg-red-500 text-white px-4 py-2 rounded"
+        >
+          Logout
+        </button>
+        <ToastContainer />
+      </div>
+    );
+  }
 
     return (
         <>
@@ -43,7 +79,7 @@ e.preventDefault();
                             </label>
                         </div>
                         <div className="mt-2">
-                            <input onChange={(e) => SetEmail(e.target.value)} type="mail" name="mail" id="email" required={true} value={mail} className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+                            <input onChange={(e) => SetEmail(e.target.value)} type="mail" name="mail" id="email"  value={mail} className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
                         </div>
                         <div className="flex items-center justify-between">
                             <label htmlFor="password" className="block text-sm/6 font-medium text-gray-900">

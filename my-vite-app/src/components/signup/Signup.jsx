@@ -194,7 +194,7 @@ function Signup() {
 
                                  
                         </div>
-                        <div className="m-5 ">
+                        <div className="m-5 py-3">
                             <button  type="submit"
                                 style={{backgroundColor: disable ? "red" : "green" }}   className="py-3 px-5 rounded-xl text-white cursor-pointer">
                                 Sign Up

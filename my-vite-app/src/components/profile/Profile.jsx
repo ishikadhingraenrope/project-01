@@ -15,7 +15,7 @@ useEffect(()=>{
 const handleLogout=()=>{
     localStorage.removeItem("userdata");
     SetUser(null);
-    navigate("/login");
+    navigate("/signup");
 }
   if (!user) {
     return (

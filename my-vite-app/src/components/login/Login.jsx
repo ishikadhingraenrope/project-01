@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useNavigate ,useLocation} from "react-router-dom";
   import { ToastContainer, toast } from 'react-toastify';
 import { FaEye, FaEyeSlash } from "react-icons/fa"; 
@@ -16,7 +16,7 @@ function Login() {
     const isLoggedIn = localStorage.getItem("isLoggedIn");
     const savedUser = JSON.parse(localStorage.getItem("userdata"));
 
-   if (loggedIn === "true" && savedUser) {
+   if (isLoggedIn === "true" && savedUser) {
     setIsLoggedIn(true);
     setUserName(savedUser.name || savedUser.mail);
   } else {
@@ -106,7 +106,7 @@ e.preventDefault();
                         
 
                         <div className="mt-3">
-                            <button  type="submit" className="py-3 px-5 bg-[#f2f1f1] rounded-xl cursor-pointer ">Login</button>
+                            <button  type="submit" className="py-3 px-5 bg-[#f2f1f1] rounded-xl cursor-pointer">Login</button>
                         </div>
                         <ToastContainer/>
                     </form>

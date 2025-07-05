@@ -77,7 +77,7 @@ function Signup() {
     return;
   }
 
-  const userdata = { first, last, number, gender, age, mail, password };
+  const userdata = { first, last, number, gender, age, mail, password, loggedOut: false };
   localStorage.setItem("userdata", JSON.stringify(userdata));
   toast.success("Yipee! Data Saved");
 
@@ -194,7 +194,7 @@ function Signup() {
 
                                  
                         </div>
-                        <div className="m-5 py-3">
+                        <div className="m-5 ">
                             <button  type="submit"
                                 style={{backgroundColor: disable ? "red" : "green" }}   className="py-3 px-5 rounded-xl text-white cursor-pointer">
                                 Sign Up

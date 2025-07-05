@@ -12,16 +12,27 @@ function Header() {
     setIsOpen(false);
     const storedUser = localStorage.getItem("userdata");
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      const userData = JSON.parse(storedUser);
+      // Only set user as logged in if they're not marked as logged out
+      if (!userData.loggedOut) {
+        setUser(userData);
+      } else {
+        setUser(null);
+      }
     } else {
       setUser(null);
     }
   }, [location]);
 
   const handleLogout = () => {
-    localStorage.removeItem("userdata");
+    const userData = JSON.parse(localStorage.getItem("userdata"));
+    if (userData) {
+      // Keep the user data but mark as logged out
+      userData.loggedOut = true;
+      localStorage.setItem("userdata", JSON.stringify(userData));
+    }
     setUser(null);
-    navigate("/signup");
+    navigate("/login");
   };
 
   return (

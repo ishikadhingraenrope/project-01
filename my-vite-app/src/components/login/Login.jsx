@@ -1,72 +1,56 @@
-import { useState,useEffect } from "react";
-import { useNavigate ,useLocation} from "react-router-dom";
-  import { ToastContainer, toast } from 'react-toastify';
-import { FaEye, FaEyeSlash } from "react-icons/fa"; 
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 function Login() {
-     const navigate = useNavigate();
-     const location = useLocation();
-
-        const[mail,SetEmail] = useState("") 
-    const[password, SetPassword] = useState("")
+    const navigate = useNavigate();
+    const [mail, SetEmail] = useState("");
+    const [password, SetPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
-      const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userName, setUserName] = useState("");
-   useEffect(() => {
-    const isLoggedIn = localStorage.getItem("isLoggedIn");
-    const savedUser = JSON.parse(localStorage.getItem("userdata"));
+    const submit = (e) => {
+        e.preventDefault();
+        const savedUser = JSON.parse(localStorage.getItem("userdata"));
 
-   if (isLoggedIn === "true" && savedUser) {
-    setIsLoggedIn(true);
-    setUserName(savedUser.name || savedUser.mail);
-  } else {
-    setIsLoggedIn(false);
-  }
-}, [location]); 
+        if (!savedUser) {
+            toast.error("No user found. Please sign up first.");
+            return;
+        }
 
-    const submit=(e)=>{
-e.preventDefault();
- const savedUser = JSON.parse(localStorage.getItem("userdata"));
+        // Check if user is logged out
+        if (savedUser.loggedOut) {
+            // User exists but is logged out, allow them to log back in
+            if (mail === savedUser.mail && password === savedUser.password) {
+                // Mark user as logged in
+                savedUser.loggedOut = false;
+                localStorage.setItem("userdata", JSON.stringify(savedUser));
+                toast.success("Login successful!");
+                setTimeout(() => {
+                    navigate("/profile");
+                }, 1500);
+                return;
+            } else {
+                toast.error("Invalid credentials!");
+                return;
+            }
+        }
 
-    if (!savedUser) {
-      toast.error("No user found. Please sign up first.");
-      return;
-    }
-
-    if (mail === savedUser.mail && password === savedUser.password) {
-      toast.success("Login successful!");
-      setTimeout(() => {
-        navigate("/profile"); // redirect to homepage/dashboard
-      }, 1500);
-    } else {
-      toast.error("Invalid credentials!");
-    }
-  };
-  const handleLogout = () => {
-    localStorage.removeItem("isLoggedIn");
-    setIsLoggedIn(false);
-    toast.success("Logged out!");
-  };
-
-  // ✅ If already logged in, show logout UI instead of login form
-  if (isLoggedIn) {
-    return (
-      <div className="p-6 text-center">
-        <h2 className="text-xl font-semibold">Welcome, {userName}!</h2>
-        <button 
-          onClick={handleLogout} 
-          className="mt-4 bg-red-500 text-white px-4 py-2 rounded"
-        >
-          Logout
-        </button>
-        <ToastContainer />
-      </div>
-    );
-  }
+        if (mail === savedUser.mail && password === savedUser.password) {
+            // Mark user as logged in
+            savedUser.loggedOut = false;
+            localStorage.setItem("userdata", JSON.stringify(savedUser));
+            toast.success("Login successful!");
+            setTimeout(() => {
+                navigate("/profile"); // redirect to homepage/dashboard
+            }, 1500);
+        } else {
+            toast.error("Invalid credentials!");
+        }
+    };
 
     return (
         <>
-
             <div className="flex min-h-full flex-col justify-center px-6  lg:px-5">
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                     <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Login in to your account</h2>
@@ -79,41 +63,44 @@ e.preventDefault();
                             </label>
                         </div>
                         <div className="mt-2">
-                            <input onChange={(e) => SetEmail(e.target.value)} type="mail" name="mail" id="email"  value={mail} className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+                            <input onChange={(e) => SetEmail(e.target.value)} type="mail" name="mail" id="email" required={true} value={mail} className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
                         </div>
                         <div className="flex items-center justify-between">
                             <label htmlFor="password" className="block text-sm/6 font-medium text-gray-900">
                                 Password
                             </label>
-                            </div>
-                            <div className="mt-2 relative">
-<input
-    type={showPassword ? "text" : "password"}
-    value={password}
-    onChange={(e) => {
-      const filtered = e.target.value.replace(/\d/g, "");
-      SetPassword(filtered);
-                            }}  maxLength={10}   id="password" name="password" placeholder="Enter Your Password " className=" block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" 
-                            
+                        </div>
+                        <div className="mt-2 relative">
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                value={password}
+                                onChange={(e) => {
+                                    const filtered = e.target.value.replace(/\d/g, "");
+                                    SetPassword(filtered);
+                                }}
+                                maxLength={10}
+                                id="password"
+                                name="password"
+                                placeholder="Enter Your Password "
+                                className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                             />
                             <button
-    type="button"
-    onClick={() => setShowPassword(!showPassword)}
-    className="absolute  right-3 top-1/2 transform -translate-y-1/2 text-xl text-gray-700 focus:outline-none"
-  >
-    {showPassword ?<FaEye />  : <FaEyeSlash />}
-  </button>                            </div>
-                        
-
-                        <div className="mt-3">
-                            <button  type="submit" className="py-3 px-5 bg-[#f2f1f1] rounded-xl cursor-pointer">Login</button>
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-xl text-gray-700 focus:outline-none"
+                            >
+                                {showPassword ? <FaEye /> : <FaEyeSlash />}
+                            </button>
                         </div>
-                        <ToastContainer/>
+                        <div className="mt-3">
+                            <button type="submit" className="py-3 px-5 bg-[#f2f1f1] rounded-xl hover:border-primary">Login</button>
+                        </div>
+                        <ToastContainer />
                     </form>
                 </div>
             </div>
-
         </>
-    )
+    );
 }
+
 export default Login;

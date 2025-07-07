@@ -36,17 +36,6 @@ function Login() {
             }
         }
 
-        if (mail === savedUser.mail && password === savedUser.password) {
-            // Mark user as logged in
-            savedUser.loggedOut = false;
-            localStorage.setItem("userdata", JSON.stringify(savedUser));
-            toast.success("Login successful!");
-            setTimeout(() => {
-                navigate("/profile"); // redirect to homepage/dashboard
-            }, 1500);
-        } else {
-            toast.error("Invalid credentials!");
-        }
     };
 
     return (

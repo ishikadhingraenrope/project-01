@@ -54,6 +54,8 @@ function Header() {
               <>
                 <Link to="/login" className="hover:text-amber-500">Login</Link>
                 <Link to="/signup" className="hover:text-amber-500">Signup</Link>
+                <Link to="/login?admin=true" className="block text-white hover:text-amber-500">Admin</Link>
+
               </>
             )}
           </div>
@@ -76,12 +78,14 @@ function Header() {
             <Link to="/about" className="block text-white hover:text-amber-500">About</Link>
             <Link to="/service" className="block text-white hover:text-amber-500">Services</Link>
             <Link to="/contact" className="block text-white hover:text-amber-500">Contact</Link>
+
             {user ? (
               <button onClick={handleLogout} className="block w-full text-left px-0 py-2 bg-red-500 rounded hover:bg-red-600 mt-2">Logout</button>
             ) : (
               <>
                 <Link to="/login" className="block text-white hover:text-amber-500">Login</Link>
                 <Link to="/signup" className="block text-white hover:text-amber-500">Signup</Link>
+                <Link to="/admin" className="block text-white hover:text-amber-500">Admin</Link>
               </>
             )}
           </div>

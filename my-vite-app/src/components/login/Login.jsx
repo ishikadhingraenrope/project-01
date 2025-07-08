@@ -12,6 +12,25 @@ function Login() {
     const submit = (e) => {
         e.preventDefault();
         const savedUser = JSON.parse(localStorage.getItem("userdata"));
+        const adminEmail = "admin@gmail.com";
+        const adminPassword = "admin@!";
+if (mail === adminEmail && password === adminPassword){
+    const adminUser =  {
+      mail: adminEmail,
+      password: adminPassword,
+      isAdmin: true,
+      loggedOut: false,
+      first: "Admin",
+      last: "User",
+    };
+
+ localStorage.setItem("userdata",JSON.stringify(adminUser));
+ toast.success("Logged In as a Admin");
+    setTimeout(() => {
+      navigate("/");
+    }, 1500);
+   return;
+}
 
         if (!savedUser) {
             toast.error("No user found. Please sign up first.");
@@ -36,6 +55,17 @@ function Login() {
             }
         }
 
+        if (mail === savedUser.mail && password === savedUser.password) {
+            // Mark user as logged in
+            savedUser.loggedOut = false;
+            localStorage.setItem("userdata", JSON.stringify(savedUser));
+            toast.success("Login successful!");
+            setTimeout(() => {
+                navigate("/profile"); // redirect to homepage/dashboard
+            }, 1500);
+        } else {
+            toast.error("Invalid credentials!");
+        }
     };
 
     return (

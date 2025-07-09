@@ -85,7 +85,7 @@ function Header() {
               <>
                 <Link to="/login" className="block text-white hover:text-amber-500">Login</Link>
                 <Link to="/signup" className="block text-white hover:text-amber-500">Signup</Link>
-                <Link to="/admin" className="block text-white hover:text-amber-500">Admin</Link>
+                <Link to="/login?admin=true" className="block text-white hover:text-amber-500">Admin</Link>
               </>
             )}
           </div>

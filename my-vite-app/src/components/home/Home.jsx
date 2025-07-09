@@ -8,53 +8,52 @@ function Home() {
   const [editModeIndex, setEditModeIndex] = useState(null);
 
   // Load images and admin status
-useEffect(() => {
-  // Always load images
-  const storedImages = JSON.parse(localStorage.getItem("sliderImages")) || [];
-  setImages(storedImages);
+  useEffect(() => {
+    const storedImages = JSON.parse(localStorage.getItem("sliderImages")) || [];
+    setImages(storedImages);
 
-  // Check if user is admin
-  const user = JSON.parse(localStorage.getItem("userdata"));
-  setIsAdmin(user?.isAdmin === true);
-}, []);
+    const user = JSON.parse(localStorage.getItem("userdata"));
+    setIsAdmin(user?.isAdmin === true);
+  }, []);
 
   // Auto Slide Logic
   useEffect(() => {
     if (images.length > 1) {
       const interval = setInterval(() => {
         setCurrentIndex((prev) => (prev + 1) % images.length);
-      }, 3000); // 3 seconds
-
+      }, 3000);
       return () => clearInterval(interval);
     }
   }, [images]);
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+ const handleImageUpload = (e) => {
+  const files = Array.from(e.target.files);
+  if (files.length === 0) return;
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      let updatedImages;
-      if (editModeIndex !== null) {
-        updatedImages = [...images];
-        updatedImages[editModeIndex] = reader.result;
-        setEditModeIndex(null);
-      } else {
-        // Add only if below 3 images
-        if (images.length >= 3) {
-          alert("Maximum 3 images allowed in slider.");
-          return;
-        }
-        updatedImages = [...images, reader.result];
-      }
+  const promises = files.map(file => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  });
 
-      setImages(updatedImages);
-      localStorage.setItem("sliderImages", JSON.stringify(updatedImages));
-    };
+  Promise.all(promises).then((newImages) => {
+    // 🔥 Fetch latest from localStorage to avoid overwriting with stale state
+    const storedImages = JSON.parse(localStorage.getItem("sliderImages")) || [];
+    let updatedImages = [...storedImages, ...newImages];
 
-    reader.readAsDataURL(file);
-  };
+    if (updatedImages.length > 3) {
+      updatedImages = updatedImages.slice(0, 3);
+      alert("Only the first 3 images are added to the slider.");
+    }
+
+    setImages(updatedImages); // update UI
+    localStorage.setItem("sliderImages", JSON.stringify(updatedImages)); // persist
+  });
+};
+
 
   const deleteImage = (index) => {
     const filtered = images.filter((_, i) => i !== index);
@@ -64,8 +63,8 @@ useEffect(() => {
 
   return (
     <div className="flex flex-col items-center">
-
-      <div className="relative w-full shadow overflow-hidden">
+      {/* Slider Section */}
+      <div className="relative w-full shadow overflow-hidden h-[300px]">
         {images.length > 0 ? (
           <img
             src={images[currentIndex]}
@@ -79,6 +78,7 @@ useEffect(() => {
         )}
       </div>
 
+      {/* Admin Controls */}
       {isAdmin && (
         <>
           <div className="mt-4">

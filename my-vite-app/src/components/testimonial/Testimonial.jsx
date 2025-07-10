@@ -24,6 +24,7 @@ function Testimonial() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [form, setForm] = useState({ name: '', text: '', role: '' });
   const [editIndex, setEditIndex] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   // Load testimonials and admin status
   useEffect(() => {
@@ -31,6 +32,7 @@ function Testimonial() {
     setTestimonials(stored && Array.isArray(stored) ? stored : defaultTestimonials);
     const user = JSON.parse(localStorage.getItem("userdata"));
     setIsAdmin(user?.isAdmin === true);
+    setIsLoggedIn(!!user); // true if user exists
   }, []);
 
   // Auto-advance slider for non-admins
@@ -73,6 +75,15 @@ function Testimonial() {
     setForm(testimonials[idx]);
     setEditIndex(idx);
   };
+
+  if (!isLoggedIn) {
+    return (
+      <div className="w-full max-w-xl mx-auto mt-8 p-6 bg-white rounded shadow text-center">
+        <h2 className="text-xl font-bold mb-4">Testimonials</h2>
+        <p>Please log in to view testimonials.</p>
+      </div>
+    );
+  }
 
   if (isAdmin) {
     return (

@@ -37,7 +37,7 @@ function Header() {
 
   return (
     <>
-      <nav className="bg-[#3f271e] text-white shadow-md">
+      <nav className="bg-[#3f271e] text-white shadow-xl">
         <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
           {/* Logo */}
           <div className="text-xl font-bold text-white">MySite</div>

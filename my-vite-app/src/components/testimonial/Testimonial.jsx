@@ -32,7 +32,7 @@ function Testimonial() {
     setTestimonials(stored && Array.isArray(stored) ? stored : defaultTestimonials);
     const user = JSON.parse(localStorage.getItem("userdata"));
     setIsAdmin(user?.isAdmin === true);
-    setIsLoggedIn(!!user); // true if user exists
+    setIsLoggedIn(!!user && user.loggedOut !== true); // true only if user exists and is not logged out
   }, []);
 
   // Auto-advance slider for non-admins

@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
-
+import imageLogo from "../../image/1.png"
 const defaultTestimonials = [
   {
     name: "Alice Smith",
     text: "This service is fantastic! It exceeded all my expectations.",
-    role: "Product Manager"
+    role: "Product Manager",
+    image: "../image/1.png",
+    alt: "Alice",
+
   },
   {
     name: "Bob Johnson",
@@ -22,10 +25,10 @@ function Testimonial() {
   const [testimonials, setTestimonials] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [form, setForm] = useState({ name: '', text: '', role: '' });
+  const [form, setForm] = useState({ name: '', text: '', role: '', image: '', alt:'' });
   const [editIndex, setEditIndex] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+  const [image,setImage] = useState(0);
   // Load testimonials and admin status
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem("testimonials"));
@@ -33,6 +36,7 @@ function Testimonial() {
     const user = JSON.parse(localStorage.getItem("userdata"));
     setIsAdmin(user?.isAdmin === true);
     setIsLoggedIn(!!user && user.loggedOut !== true); // true only if user exists and is not logged out
+    console.log("setTestimonials", defaultTestimonials[currentIndex]?.image)
   }, []);
 
   // Auto-advance slider for non-admins
@@ -58,7 +62,7 @@ function Testimonial() {
     }
     setTestimonials(updated);
     localStorage.setItem("testimonials", JSON.stringify(updated));
-    setForm({ name: '', text: '', role: '' });
+    setForm({ name: '', text: '', role: '',image:'' });
     setEditIndex(null);
   };
 
@@ -91,6 +95,16 @@ function Testimonial() {
         <h2 className="text-xl font-bold mb-4">Manage Testimonials</h2>
         <form onSubmit={handleSubmit} className="mb-6 flex flex-col gap-2 items-center">
           <input
+          type="text" className="border rounded px-2 py-1 w-full"
+          placeholder="Enter image URL"
+          value={form.image}
+            onChange={e => setForm({ ...form, image: e.target.value })}
+          />
+          
+          
+          
+          
+          <input
             className="border rounded px-2 py-1 w-full"
             placeholder="Name"
             value={form.name}
@@ -115,14 +129,17 @@ function Testimonial() {
             {editIndex !== null ? 'Update' : 'Add'} Testimonial
           </button>
           {editIndex !== null && (
-            <button type="button" onClick={() => { setForm({ name: '', text: '', role: '' }); setEditIndex(null); }} className="text-xs text-gray-500 mt-1">Cancel Edit</button>
+            <button type="button" onClick={() => { setForm({ name: '', text: '', role: '', image: '', }); setEditIndex(null); }} className="text-xs text-gray-500 mt-1">Cancel Edit</button>
           )}
         </form>
         <div className="flex flex-col gap-4">
           {testimonials.map((t, idx) => (
             <div key={idx} className="border rounded p-4 relative text-left">
-              <div className="italic mb-2">"{t.text}"</div>
-              <div className="font-semibold">- {t.name}</div>
+              <div className="italic mb-2">
+                <img src={t.image} alt={t.alt}/>
+              </div>
+              <div className="italic mb-2">{t.text}</div>
+              <div className="font-semibold"> {t.name}</div>
               <div className="text-sm text-gray-500">{t.role}</div>
               <div className="absolute top-2 right-2 flex gap-2">
                 <button onClick={() => handleEdit(idx)} className="bg-yellow-500 text-white text-xs px-2 rounded">Edit</button>
@@ -139,6 +156,7 @@ function Testimonial() {
   return (
     <div className="w-full max-w-xl mx-auto mt-8 p-6 bg-white rounded shadow text-center">
       <div className="min-h-[120px] flex flex-col justify-center items-center">
+        <img src={testimonials[currentIndex]?.image} alt={testimonials.alt} className="testimonial-img"/>
         <p className="text-lg italic mb-4">"{testimonials[currentIndex]?.text}"</p>
         <div className="font-semibold">- {testimonials[currentIndex]?.name}</div>
         <div className="text-sm text-gray-500">{testimonials[currentIndex]?.role}</div>
@@ -152,6 +170,7 @@ function Testimonial() {
             aria-label={`Go to testimonial ${idx + 1}`}
           />
         ))}
+        <img src={imageLogo} alt="test"/>
       </div>
     </div>
   );

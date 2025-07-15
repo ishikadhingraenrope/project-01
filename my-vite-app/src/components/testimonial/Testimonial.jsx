@@ -1,23 +1,26 @@
 import React, { useState, useEffect } from "react";
-import imageLogo from "../../image/1.png"
+
 const defaultTestimonials = [
   {
     name: "Alice Smith",
     text: "This service is fantastic! It exceeded all my expectations.",
     role: "Product Manager",
-    image: "../image/1.png",
     alt: "Alice",
-
+    image: "./src/image/2.png",
   },
   {
     name: "Bob Johnson",
     text: "A wonderful experience from start to finish. Highly recommended!",
-    role: "Developer"
+    role: "Developer",
+     alt: "Bob",
+     image: "./src/image/1.png",
   },
   {
     name: "Carol Lee",
     text: "Professional, efficient, and friendly. Will use again!",
-    role: "Designer"
+    role: "Designer",
+    alt: "Carol",
+    image: "./src/image/3.png",
   }
 ];
 
@@ -25,10 +28,9 @@ function Testimonial() {
   const [testimonials, setTestimonials] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [form, setForm] = useState({ name: '', text: '', role: '', image: '', alt:'' });
+  const [form, setForm] = useState({ name: '', text: '', role: '', image: '', alt: '' });
   const [editIndex, setEditIndex] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [image,setImage] = useState(0);
   // Load testimonials and admin status
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem("testimonials"));
@@ -50,6 +52,16 @@ function Testimonial() {
   }, [testimonials, isAdmin]);
 
   const goTo = (idx) => setCurrentIndex(idx);
+const handleImageUpload = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setForm(prev => ({ ...prev, image: reader.result, alt: file.name }));
+    };
+    reader.readAsDataURL(file); // converts to base64
+  }
+};
 
   // Admin: Add or Edit testimonial
   const handleSubmit = (e) => {
@@ -62,7 +74,7 @@ function Testimonial() {
     }
     setTestimonials(updated);
     localStorage.setItem("testimonials", JSON.stringify(updated));
-    setForm({ name: '', text: '', role: '',image:'' });
+    setForm({ name: '', text: '', role: '', image: '', alt:'' });
     setEditIndex(null);
   };
 
@@ -95,15 +107,23 @@ function Testimonial() {
         <h2 className="text-xl font-bold mb-4">Manage Testimonials</h2>
         <form onSubmit={handleSubmit} className="mb-6 flex flex-col gap-2 items-center">
           <input
-          type="text" className="border rounded px-2 py-1 w-full"
-          placeholder="Enter image URL"
-          value={form.image}
-            onChange={e => setForm({ ...form, image: e.target.value })}
+            type="file"
+            accept="image/*"
+            className="border rounded px-2 py-1 w-full"
+            placeholder="Image URL"
+  onChange={ handleImageUpload}          />
+
+          <input
+            type="text"
+            className="border rounded px-2 py-1 w-full"
+            placeholder="Alt text for image"
+            value={form.alt}
+            onChange={e => setForm({ ...form, alt: e.target.value })}
           />
-          
-          
-          
-          
+
+
+
+
           <input
             className="border rounded px-2 py-1 w-full"
             placeholder="Name"
@@ -136,8 +156,12 @@ function Testimonial() {
           {testimonials.map((t, idx) => (
             <div key={idx} className="border rounded p-4 relative text-left">
               <div className="italic mb-2">
-                <img src={t.image} alt={t.alt}/>
-              </div>
+<img
+  src={t.image || imageLogo}
+  alt={t.alt || t.name}
+  onError={(e) => { e.target.onerror = null; e.target.src = imageLogo }}
+  className="h-20 w-20 object-cover rounded-full mx-auto mb-2"
+/>              </div>
               <div className="italic mb-2">{t.text}</div>
               <div className="font-semibold"> {t.name}</div>
               <div className="text-sm text-gray-500">{t.role}</div>
@@ -156,8 +180,11 @@ function Testimonial() {
   return (
     <div className="w-full max-w-xl mx-auto mt-8 p-6 bg-white rounded shadow text-center">
       <div className="min-h-[120px] flex flex-col justify-center items-center">
-        <img src={testimonials[currentIndex]?.image} alt={testimonials.alt} className="testimonial-img"/>
-        <p className="text-lg italic mb-4">"{testimonials[currentIndex]?.text}"</p>
+<img
+  src={testimonials[currentIndex]?.image || imageLogo}
+  alt={testimonials[currentIndex]?.alt || testimonials[currentIndex]?.name}
+  className="h-20 w-20 object-cover rounded-full mb-4"
+/>      <p className="text-lg italic mb-4">"{testimonials[currentIndex]?.text}"</p>
         <div className="font-semibold">- {testimonials[currentIndex]?.name}</div>
         <div className="text-sm text-gray-500">{testimonials[currentIndex]?.role}</div>
       </div>
@@ -170,7 +197,6 @@ function Testimonial() {
             aria-label={`Go to testimonial ${idx + 1}`}
           />
         ))}
-        <img src={imageLogo} alt="test"/>
       </div>
     </div>
   );

@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
-
 function Login() {
     const navigate = useNavigate();
     const [mail, SetEmail] = useState("");

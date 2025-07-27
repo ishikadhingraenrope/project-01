@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "../../config/firestore";
 function Signup() {
   const navigate = useNavigate();
 
@@ -24,7 +25,7 @@ function Signup() {
     }
   }, [first, last, number, gender, age, mail, password])
 
-  const handleButton = (e) => {
+  const handleButton = async (e) => {
     e.preventDefault();
 
     if (!first.trim()) {
@@ -78,6 +79,17 @@ function Signup() {
     }
 
     const userdata = { first, last, number, gender, age, mail, password, loggedOut: false };
+  try {
+    await addDoc(collection(db, "users"), {...userdata});
+    toast.success("Signup successful!");
+    navigate("/login");
+  } catch (err) {
+    console.error("Signup error:", err);
+    toast.error("Error signing up");
+  }
+
+
+    
     localStorage.setItem("userdata", JSON.stringify(userdata));
     toast.success("Yipee! Data Saved");
 
